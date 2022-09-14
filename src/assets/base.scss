@@ -1,0 +1,107 @@
+@import "~antd/dist/antd.css";
+
+$bgcolor: #efefef;
+@mixin t-overflow($line: 1) {
+  @if $line==1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+body {
+  font-size: 14px;
+  color: #333;
+  font-family: "微软雅黑";
+  background: $bgcolor;
+}
+#app {
+  height: 100vh;
+}
+header {
+  height: 70px;
+  background: #fff;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+footer {
+  height: 70px;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  line-height: 70px;
+}
+// 头部
+.avater-img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+.logo-img {
+  height: 70px;
+  // width: 40px;
+  // border-radius: 50%;
+}
+.right {
+  height: "60px";
+  display: "block";
+  line-height: "60px";
+  .username {
+    max-width: 80px;
+    display: block;
+    @include t-overflow;
+  }
+  &:hover {
+    color: #1890ff;
+  }
+}
+// 侧边栏
+//内容页
+main {
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.table-list {
+  background-color: rgb(255, 255, 255);
+  height: 100%;
+  overflow: auto;
+}
+.ant-form-item-label > label,
+.ant-checkbox-wrapper {
+  color: #fff;
+}
+//滚动条
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px;
+  height: 100px;
+  background: #fff;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background: #ededed;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #535353;
+}
+//抽屉
+.ant-drawer-wrapper-body{
+  background-image: linear-gradient(to top, #042a70 0%, #001529 100%);
+}
+.ant-drawer-title,.ant-drawer-close{
+  color: #fff;
+}
