@@ -6,6 +6,7 @@ import {
   Drawer,
   Form,
   Input,
+  message,
   Row,
   Select,
   Space,
@@ -33,10 +34,11 @@ const Informat = (props) => {
   const handleOk=(values)=>{
     setLoading(true)
     //操作 
-    console.log(checkedKeys);
-    console.log(values);
+    const data={...values,...{permissions:checkedKeys}}
+    console.log(data);
     setTimeout(()=>{
       setLoading(false)
+      message.success('修改成功')
       onCancel()
     },2000)
   }

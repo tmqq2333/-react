@@ -1,8 +1,8 @@
 import App from "../App";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import React, { Suspense,useEffect,useState } from "react";
-import { BrowserRouter as Router, Routes, Route,Navigate } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 /* History模式
      BrowserRouter

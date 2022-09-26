@@ -25,6 +25,7 @@ export const App = (props) => {
     });
   };
   useEffect(() => {
+    localStorage.setItem('active-eruda',true)
     getPassword().then((res) => {
       const fing = res.some((i) => i.token === localStorage.getItem("token"));
       if (fing) {

@@ -40,10 +40,17 @@ const menus = [
       },
       {
         key: "0-1-1",
-        path: "/edit/ship",
+        path: "/edit/means",
         title: "文章发布",
         icon: <AreaChartOutlined />,
         component: React.lazy(() => import("../pages/Means.jsx")),
+      },
+      {
+        key: "0-1-2",
+        path: "/edit/look",
+        title: "文章库",
+        icon: <AreaChartOutlined />,
+        component: React.lazy(() => import("../pages/Look.jsx")),
       }
     ]
   },
@@ -62,6 +69,13 @@ const menus = [
         component: React.lazy(() => import("../pages/Repbox.jsx")),
       }
     ]
+  },
+  {
+    key: "0-3",
+    path: "/statistics",
+    title: "统计",
+    icon: <AreaChartOutlined />,
+    component: React.lazy(() => import("../pages/Statistics.jsx")),
   },
 ]
 
