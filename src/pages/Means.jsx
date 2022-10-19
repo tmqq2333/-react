@@ -22,6 +22,7 @@ export const Means = (props) => {
           <TopSelect
             // getCreate={getTrainUnloading}
             // postPer={postTrainProcess}
+            title="审核"
             getRefresh={getRefresh}
             // listArr={arrList}
           ></TopSelect>

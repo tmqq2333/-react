@@ -4,9 +4,16 @@ import {
 } from "antd";
 const { Option } = Select;
 export default function SelectD(props) {
-  const [disable, setDisable] = useState(!!props.disabled??false);
+  const [disable, setDisable] = useState(!!props.undisabled??false);
   const [optionList, setOptionList] = useState([]);
   const {infBroad,option,clearValue,onChange,value}=props
+  const inf=['infBroad','option','clearValue','onChange','value','controlS','controlM','undisabled','type','inf','id','rule','valueName']
+  let preprops={}//组件本身数据
+  for(let v in props){
+    if(!inf.includes(v)){
+      preprops[v]=props[v]
+    }
+  }
   const findOption=(data)=>{
 
    if(Object.prototype.toString.call(data)==="[object Array]"){ 
@@ -67,16 +74,9 @@ export default function SelectD(props) {
 
   return (<Select
         disabled={disable}
-        placeholder={props.placeholder ?? undefined}
-        mode={props.mode}
-        value={value}
-        showArrow={props.showArrow??true}
-        filterOption={props.filterOption??true}
-        showSearch={props.showSearch}
-        allowClear={props.allowClear??false}
-        style={props.style}
-
-        onSearch={props.onSearch}
+        placeholder={'请选择'+preprops.title}
+         value={value}
+        {...preprops}
         onChange={(e) => findChange(props.valueName, e)}
       >
         {findOption(option).map((v, i) => {

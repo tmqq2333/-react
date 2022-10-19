@@ -3,9 +3,13 @@
   background-color: #111;
   display: flex;
   transform-style: preserve-3d;
-  perspective: 500px;
+  perspective: 1000px;
   background: #000;
   overflow: hidden;
+  --c-eyeSocket: rgb(41, 104, 217);
+  --c-eyeSocket-outer: #02ffff;
+  --c-eyeSocket-outer-shadow: transparent;
+  --c-eyeSocket-inner: rgb(35, 22, 140);
 }
 
 // @property --height {
@@ -114,12 +118,9 @@
 //         transform: translate(-50%, calc(-50% - var(--halfHeight))) rotate(2160deg) translateZ(0px);
 //     }
 // }
-:root {
-    --c-eyeSocket: rgb(41, 104, 217);
-    --c-eyeSocket-outer: #02ffff;
-    --c-eyeSocket-outer-shadow: transparent;
-    --c-eyeSocket-inner: rgb(35, 22, 140);
-}
+// :root {
+   
+// }
 
 .eyeSocket {
     position: absolute; // 浮动居中
@@ -186,4 +187,29 @@
 .filter .eyeSocket {
     opacity: 0; // 默认状态下不透明度为0
     // 添加过渡效果，值得注意的是不能丢了原本的过渡效果，所以这里使用all
+}
+.eyeSocketLooking {
+    animation: lookAround 2.5s; // 添加动画，只播放一次
+}
+/* 环视动画 */
+@keyframes lookAround {
+    0% {
+        transform: translateX(0) rotateY(0);
+    }
+
+    10% {
+        transform: translateX(0) rotateY(0);
+    }
+
+    40% {
+        transform: translateX(-70px) rotateY(-30deg);
+    }
+
+    80% {
+        transform: translateX(70px) rotateY(30deg);
+    }
+
+    100% {
+        transform: translateX(0) rotateY(0);
+    }
 }

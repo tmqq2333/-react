@@ -46,32 +46,26 @@ listArr配置
 const plantOption = [];
 const ChidlistArr = [
   {
-    title: "作业部",
-    disabled: true,
+    title: "类型",
+    undisabled: true,
     rule: true,
     controlM:["storage_code",{disable:true,ganged:"true"}],
-    placeholder: "请选择",
     valueName: "plant_code",
-    option:plantOption?.reduce((i,v) => {
-      return {...i,[v.storage_code]:[{value:v.plant_code,label:v.plant_desc}]};
-      },undefined)
+    option:{"k1":[{value:'s1',label:'吾皇'}],"k2":[{value:'s1',label:'巴扎黑'}],"k3":[{value:'s1',label:'卡卡'}]}
     },
   {
-    title: "库存地",
-    disabled: false,
+    title: "视角",
+    undisabled: false,
     controlS:true,
     rule: true,
-    placeholder: "请选择",
+    unplaceholder: 'true',
     valueName: "storage_code",
-    option:plantOption?.map((i)=>{
-     return {value:i.storage_code,label:i.storage_location}
-    }),
+    option:[{value:'k1',label:'12'},{value:'k2',label:'88'},{value:'k3',label:'66'}]
   },
   {
-    title: "物料名称",
-    disabled: false,
+    title: "时代",
+    undisabled: false,
     rule: true,
-    placeholder: "请选择",
     valueName: "material_name",
     showSearch:true,
     showArrow:false,
@@ -79,9 +73,9 @@ const ChidlistArr = [
     onSearch:true
   },
   {
-    title: "批次号",
-    disabled: false,
-    placeholder: "请选择",
+    title: "名称",
+    rule: true,
+    undisabled: false,
     valueName: "batch_number",
     type:()=>{
       return  <Input  style={{ width: 270 }}/>
@@ -113,9 +107,9 @@ export default function TopSelect(props) {
       ? props.listArr
       : [...props.listArr??[], ...ChidlistArr];
     listArr.map((i) => {
-      if (!i.placeholder) {
+      if (i.unplaceholder) {
         form.setFieldsValue({
-          [i.valueName]: i.option[0]?.value,
+          [i.valueName]: i.option?.[0].value,
         });
       }
     });
@@ -254,18 +248,10 @@ export default function TopSelect(props) {
                       >
                         {
                           item.type?.()?? (<SelectD
-                          disabled={item.disabled}
-                          valueName={item.valueName}
-                          placeholder={"请选择"+item.title}
-                          mode={item.mode ?? undefined}
                           allowClear
-                          showArrow={item.showArrow??true}
-                          filterOption={item.filterOption??true}
+                          {...item}
                           onSearch={item.onSearch?handleSearch:undefined}
-                          showSearch={item.showSearch??false}
                           clearValue={clearValue}
-                          controlS={item.controlS ?? undefined}
-                          controlM={item.controlM ?? undefined}
                           option={item.option??data}
                           inf={inf}
                           style={{ width: 270 }}
@@ -315,12 +301,12 @@ export default function TopSelect(props) {
           style={{ width: 1000, height: 90, marginTop: -10, marginLeft: 10 }}
         >
           <p style={{ height: 30 }}>
-            {props.title ? (props.title === "配料" ? "配料" : "送料") : "卸料"}
+            {props.title}
             流程 :
           </p>
           <Select
             disabled={disable}
-            placeholder="等待创建作业..."
+            placeholder="等待反馈..."
             style={{ width: 1000 }}
             value={perList?.route_code}
             onChange={(e,v)=>{performChange(e,v)}}

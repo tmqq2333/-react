@@ -5,58 +5,41 @@ import "./scss/list.scss";
 export const List = (props) => {
   const eyeball = createRef();
   const bigEye = createRef();
-  const [sleep, setSleep] = useState(true);
-  // const [ballSize, setBallSize] = useState(12);
-  // const [leftRotSize, setLeftRotSize] = useState(0);
-  //   const multiple = 10;
+  const [leep, setLeep] = useState(false);
+  const [weakup, setWeakup] = useState("eyeSocketSleeping"); //休息：eyeSocketSleeping 醒来：eyeSocketLooking
+  const [opt, setOpt] = useState({eyeXDeg:0,eyeYDeg:0});
+  let eyeballChart;
   let leftRotSize = 0; // 旋转角度
   let ballSize = 0; // 眼睛尺寸
-  let eyeballChart;
-  let rotTimer; // 定时器
   let ballColor = "transparent";
-  // // 添加点击事件，当处于休眠状态时执行唤醒方法
-  const onclickToWeakup = () => {
-    console.log(sleep);
-    if (!sleep) return;
+  let rotTimer; // 定时器
+  let sleepTimer;
+  const someStyle = {
+    "--c-eyeSocket": leep ? "rgb(255,187,255)" : "rgb(41, 104, 217)",
+    "--c-eyeSocket-outer": leep ? "rgb(238,85,135)" : "#02ffff",
+    "--c-eyeSocket-outer-shadow": leep ? "rgb(255, 60, 86)" : "transparent",
+    "--c-eyeSocket-inner": leep ? "rgb(208,14,74)" : "rgb(35, 22, 140)",
+  };
+  useEffect(() => {
+    eyeballChart = echarts.init(eyeball.current); // 初始化画布
     getEyeballChart();
-    setAngry();
-    setSleep(false); // 修改状态
+    // toSleep()
+  });
+  function toSleep() {
     clearInterval(rotTimer); // 清除定时器
     rotTimer = setInterval(() => {
-      ballSize <= 50 && (ballSize += 1);
-      leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.5);
-      getEyeballChart(eyeball);
+      getEyeballChart();
+      if (ballSize > 0) {
+        ballSize -= 0.1; // 当眼球存在时慢慢减小
+      } else {
+        setWeakup("eyeSocketSleeping");
+      }
+      leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1); // 旋转，
     }, 10);
-  };
-  // 唤醒
-  // 生气模式
-  function setAngry() {
-    // 通过js修改body的css变量
-    document.body.style.setProperty("--c-eyeSocket", "rgb(255,187,255)");
-    document.body.style.setProperty("--c-eyeSocket-outer", "rgb(238,85,135)");
-    document.body.style.setProperty(
-      "--c-eyeSocket-outer-shadow",
-      "rgb(255, 60, 86)"
-    );
-    document.body.style.setProperty("--c-eyeSocket-inner", "rgb(208,14,74)");
-    ballColor = "rgb(208,14,74)";
+    document.body.removeEventListener('mousemove', focusOnMouse)
+    setOpt({eyeXDeg:0,eyeYDeg:0})
   }
-  // 常态模式
-  function setNormal() {
-    document.body.style.setProperty("--c-eyeSocket", "rgb(41, 104, 217)");
-    document.body.style.setProperty("--c-eyeSocket-outer", "#02ffff");
-    document.body.style.setProperty(
-      "--c-eyeSocket-outer-shadow",
-      "transparent"
-    );
-    document.body.style.setProperty("--c-eyeSocket-inner", "rgb(35, 22, 140)");
-    ballColor = "rgb(0,238,255)";
-  }
-  // 初始化画布
   function getEyeballChart() {
-    if (!eyeballChart) {
-      eyeballChart = echarts.init(eyeball.current);
-    }
     eyeballChart.setOption({
       series: [
         {
@@ -89,39 +72,93 @@ export const List = (props) => {
       ],
     });
   }
-
-  // 休眠
-  function toSleep() {
+  const onclickToWeakup = () => {
+    if (weakup === "eyeSocketLooking") return;
+    getEyeballChart();
+    setLeep(true);
+    ballColor = "rgb(208,14,74)";
+    setWeakup("eyeSocketLooking");
     clearInterval(rotTimer); // 清除定时器
     rotTimer = setInterval(() => {
+      ballSize <= 50 && ballSize++;
+      leftRotSize === 360
+        ? (leftRotSize = 0)
+        : (leftRotSize = leftRotSize + 0.5);
       getEyeballChart();
-      if (ballSize > 0) {
-        ballSize -= 0.1; // 当眼球存在时慢慢减小
-      } else {
-        setSleep(true);
-      }
-      leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1); // 旋转，
     }, 10);
+    setTimeout(() => {
+      adjust();
+      document.body.addEventListener('mousemove', focusOnMouse);
+    }, 3000);
+  };
+  //调整状态
+  function adjust() {
+    new Promise((res) => {
+      clearInterval(rotTimer); // 清除定时器
+      rotTimer = setInterval(() => {
+        getEyeballChart(); // 更新视图
+        ballSize > 0 && (ballSize -= 0.5); // 眼球尺寸减小
+        leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1);
+        if (ballSize === 0) {
+          // 当眼球尺寸为0时，将Promise标记为resolved，然后执行后面的代码
+          clearInterval(rotTimer);
+          res();
+        }
+      }, 10);
+    }).then(() => {
+      setWeakup("");
+      setLeep(false); // 设置常态样式
+      ballColor = "rgb(0,238,255)";
+      rotTimer = setInterval(() => {
+        getEyeballChart();
+        ballSize <= 12 && (ballSize += 0.1); // 眼球尺寸缓慢增加
+        leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1);
+      }, 10);
+    });
   }
-
-  useEffect(() => {
-    // ...其他代码
-    // getEyeballChart(); // 把这两行删掉
-    // toSleep() // 把这两行删掉
-    // getEyeballChart();
-    // toSleep();
-  }, []);
-
+  //工作状态
+  function focusOnMouse(e) {
+    {
+      // 视口尺寸，获取到整个视口的大小
+      let clientWidth = window.innerWidth;
+      let clientHeight = window.innerHeight;
+      // 原点，即bigEye中心位置，页面中心
+      let origin = [clientWidth / 2, clientHeight / 2];
+      // 鼠标坐标
+      let mouseCoords = [e.clientX - origin[0], origin[1] - e.clientY];
+      // // 旋转角度
+      let eyeXDeg = (mouseCoords[1] / clientHeight) * 80; // 这里的80代表的是最上下边缘大眼X轴旋转角度
+      let eyeYDeg = (mouseCoords[0] / clientWidth) * 60;
+      setOpt({eyeXDeg:eyeXDeg,eyeYDeg:eyeYDeg})
+      if (sleepTimer) clearTimeout(sleepTimer);
+      sleepTimer = setTimeout(() => {
+       toSleep();
+     }, 30000);
+    }
+  }
   return (
-    <div className="table-list home-list">
+    <div className="table-list home-list" style={someStyle}>
       <div
-        className={`eyeSocket ${sleep ? "eyeSocketSleeping" : ""}`}
+        className={`eyeSocket ${weakup}`}
         ref={bigEye}
+        style={{ transform: `rotateY(${opt.eyeYDeg}deg) rotateX(${opt.eyeXDeg}deg)` }}
         onClick={onclickToWeakup}
       >
-        <div ref={eyeball} style={{ height: "100%", width: "100%" }}></div>
+        <div
+          ref={eyeball}
+          style={{
+            height: "100%",
+            width: "100%",
+            transform: `translate(${opt.eyeYDeg / 1.5}px, ${-opt.eyeXDeg / 1.5}px)`,
+          }}
+        ></div>
       </div>
-      <div className="eyeSocket" id="eyeFilter" onClick={onclickToWeakup} style={{opacity:sleep?'0':'1'}}></div>
+      <div
+        className={`eyeSocket ${weakup}`}
+        id="eyeFilter"
+        onClick={onclickToWeakup}
+        style={{ opacity: weakup === "eyeSocketLooking" ? "1" : "0" }}
+      ></div>
       {/* <div className="filter">
    
       </div> */}
