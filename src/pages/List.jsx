@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import "./scss/list.scss";
 export const List = (props) => {
   const eyeball = createRef();
-  const bigEye = createRef();
-  const [leep, setLeep] = useState(false);
+  // const [leep, setLeep] = useState(false);
+  // const [sleep, setSleep] = useState(false);
   const [weakup, setWeakup] = useState("eyeSocketSleeping"); //休息：eyeSocketSleeping 醒来：eyeSocketLooking
   const [opt, setOpt] = useState({eyeXDeg:0,eyeYDeg:0});
   let eyeballChart;
@@ -15,36 +15,31 @@ export const List = (props) => {
   let rotTimer; // 定时器
   let sleepTimer;
   const someStyle = {
-    "--c-eyeSocket": leep ? "rgb(255,187,255)" : "rgb(41, 104, 217)",
-    "--c-eyeSocket-outer": leep ? "rgb(238,85,135)" : "#02ffff",
-    "--c-eyeSocket-outer-shadow": leep ? "rgb(255, 60, 86)" : "transparent",
-    "--c-eyeSocket-inner": leep ? "rgb(208,14,74)" : "rgb(35, 22, 140)",
+    "--c-eyeSocket": sleep() ? "rgb(255,187,255)" : "rgb(41, 104, 217)",
+    "--c-eyeSocket-outer": sleep() ? "rgb(238,85,135)" : "#02ffff",
+    "--c-eyeSocket-outer-shadow": sleep() ? "rgb(255, 60, 86)" : "transparent",
+    "--c-eyeSocket-inner": sleep() ? "rgb(208,14,74)" : "rgb(35, 22, 140)",
   };
+  function sleep(){
+    if(weakup==="eyeSocketLooking") return true
+    else return false
+  }
   useEffect(() => {
     eyeballChart = echarts.init(eyeball.current); // 初始化画布
     getEyeballChart();
     // toSleep()
-  });
-  function toSleep() {
-    clearInterval(rotTimer); // 清除定时器
-    rotTimer = setInterval(() => {
-      getEyeballChart();
-      if (ballSize > 0) {
-        ballSize -= 0.1; // 当眼球存在时慢慢减小
-      } else {
-        setWeakup("eyeSocketSleeping");
-      }
-      leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1); // 旋转，
-    }, 10);
-    document.body.removeEventListener('mousemove', focusOnMouse)
-    setOpt({eyeXDeg:0,eyeYDeg:0})
-  }
+    return ()=>{
+      clearTimeout(sleepTimer);
+      clearInterval(rotTimer); // 清除定时器
+    }
+  },[]);
+  
   function getEyeballChart() {
     eyeballChart.setOption({
       series: [
         {
           type: "gauge", // 使用仪表盘类型
-          radius: "-1%", // 采用负数是为了让分割线从内向外延伸
+          radius: "8", // 采用负数是为了让分割线从内向外延伸
           clockwise: false,
           startAngle: `${0 + leftRotSize * 5}`, // 加为逆时针旋转，乘5表示速度为leftRotSize的倍
           endAngle: `${360 + leftRotSize * 5}`,
@@ -72,13 +67,36 @@ export const List = (props) => {
       ],
     });
   }
-  const onclickToWeakup = () => {
-    if (weakup === "eyeSocketLooking") return;
-    getEyeballChart();
-    setLeep(true);
-    ballColor = "rgb(208,14,74)";
-    setWeakup("eyeSocketLooking");
+  function toSleep() {
     clearInterval(rotTimer); // 清除定时器
+    rotTimer = setInterval(() => {
+      getEyeballChart();
+      if (ballSize > 0) {
+        ballSize -= 0.1; // 当眼球存在时慢慢减小
+        leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1); // 旋转，
+      } else {
+        // setSleep(false)
+        setWeakup('eyeSocketSleeping')
+        clearInterval(rotTimer); 
+      }    
+    }, 10);
+    document.body.removeEventListener('mousemove', focusOnMouse)
+    setOpt({eyeXDeg:0,eyeYDeg:0})
+  }
+  const onclickToWeakup = () => {
+    // if (leep||sleep) return;
+    if (weakup!=='eyeSocketSleeping') return;
+    clearTimeout(sleepTimer);
+    clearInterval(rotTimer); // 清除定时器
+    // 只有第一次点击存在，再次点击eyeballChart会为空，ref更新有关
+    if(!eyeballChart){
+      eyeballChart = echarts.init(eyeball.current); 
+    }
+    console.log(eyeballChart);
+    // setSleep(false)
+    // setLeep(true);
+    setWeakup('eyeSocketLooking')
+    ballColor = "rgb(208,14,74)";
     rotTimer = setInterval(() => {
       ballSize <= 50 && ballSize++;
       leftRotSize === 360
@@ -105,9 +123,10 @@ export const List = (props) => {
           res();
         }
       }, 10);
-    }).then(() => {
-      setWeakup("");
-      setLeep(false); // 设置常态样式
+    }).then(() => {  
+      // setSleep(true)
+      // setLeep(false); // 设置常态样式
+      setWeakup('')
       ballColor = "rgb(0,238,255)";
       rotTimer = setInterval(() => {
         getEyeballChart();
@@ -133,14 +152,15 @@ export const List = (props) => {
       if (sleepTimer) clearTimeout(sleepTimer);
       sleepTimer = setTimeout(() => {
        toSleep();
-     }, 30000);
+     }, 10000);
     }
   }
+
   return (
     <div className="table-list home-list" style={someStyle}>
+      {/* sleep?'x':(leep?'eyeSocketLooking':'eyeSocketSleeping') */}
       <div
         className={`eyeSocket ${weakup}`}
-        ref={bigEye}
         style={{ transform: `rotateY(${opt.eyeYDeg}deg) rotateX(${opt.eyeXDeg}deg)` }}
         onClick={onclickToWeakup}
       >
@@ -157,7 +177,7 @@ export const List = (props) => {
         className={`eyeSocket ${weakup}`}
         id="eyeFilter"
         onClick={onclickToWeakup}
-        style={{ opacity: weakup === "eyeSocketLooking" ? "1" : "0" }}
+        style={{ opacity: sleep()? "1" : "0" }}
       ></div>
       {/* <div className="filter">
    
@@ -184,7 +204,7 @@ export const List = (props) => {
           </feTurbulence>
           <feDisplacementMap
             in="SourceGraphic"
-            scale="50"
+            scale="55"
             xChannelSelector="R"
             yChannelSelector="B"
           />

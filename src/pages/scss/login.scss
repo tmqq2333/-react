@@ -59,10 +59,13 @@
     border-radius:4px; 
     box-shadow: 4px 4px 3px rgba(0,0,0,.1);
     display: flex;
-    border: 1px solid rgba($color: #ffff, $alpha: .6);
+    border: 1px solid rgba($color: #fff, $alpha: 0.6);
     justify-content: space-around;
     &_r{
       width: 320px;
     }
   }
+}
+.ant-form-item-label > label, .ant-checkbox-wrapper {
+  color: #ffffff;
 }

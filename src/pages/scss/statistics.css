@@ -1,8 +1,0 @@
-.home-list {
-  background-color: black;
-  display: flex;
-}
-
-.home-list > div {
-  flex: 1;
-}

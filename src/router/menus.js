@@ -67,6 +67,13 @@ const menus = [
         title: "资料查看",
         icon: <AreaChartOutlined />,
         component: React.lazy(() => import("../pages/Repbox.jsx")),
+      },
+      {
+        key: "0-2-1",
+        path: "/means/particular",
+        title: "资料详情",
+        icon: <AreaChartOutlined />,
+        component: React.lazy(() => import("../pages/Particulars.jsx")),
       }
     ]
   },

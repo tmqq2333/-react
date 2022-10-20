@@ -45,7 +45,11 @@ const Informat = (props) => {
   const validateMessages = {
     required: "'${name}' 是必选字段",
   };
-  
+ useEffect(()=>{
+  form.setFieldsValue({
+    name: localStorage.getItem('username'),
+  })
+}, [visible])
   const footer = () => {
     return (
       <Space>
