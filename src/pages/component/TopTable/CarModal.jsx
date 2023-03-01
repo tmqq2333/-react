@@ -3,13 +3,13 @@ import { React, useState, useEffect } from 'react'
 import { Select, Input, Button, Form, Modal, message } from 'antd'
 const { Option } = Select
 export default function CarModal(props) {
-  const [visible, setVisible] = useState(false)
+  const [open, setopen] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [option, setOption] = useState([])
   const [form] = Form.useForm()
   const { data, apiSet, getRefresh } = props
   const showModal = () => {
-    setVisible(true)
+    setopen(true)
   }
   useEffect(() => {
     let from = data ?? { job_id: '', route_code: [] }
@@ -24,16 +24,16 @@ export default function CarModal(props) {
       job_id: from.job_id,
       route_code: route_code
     })
-  }, [visible])
+  }, [open])
   const onFinish = (values) => {
     console.log('Success:', values)
     setConfirmLoading(true)
     apiSet(data.id, values)
       .then((e) => {
-        setVisible(false)
+        setopen(false)
         setConfirmLoading(false)
         message.success('操作成功')
-        getRefresh(!visible)
+        getRefresh(!open)
       })
       .catch(() => {
         setConfirmLoading(false)
@@ -46,7 +46,7 @@ export default function CarModal(props) {
   const handleCancel = () => {
     console.log('Clicked cancel button')
 
-    setVisible(false)
+    setopen(false)
   }
   const layout = {
     labelCol: {
@@ -63,7 +63,7 @@ export default function CarModal(props) {
       </Button>
       <Modal
         title="自由流程"
-        visible={visible}
+        open={open}
         bodyStyle={{ minHeight: 236 }}
         footer={null}
         centered
@@ -72,11 +72,11 @@ export default function CarModal(props) {
       >
         <Form
           name="basic"
+          form={form}
           initialValues={{
             remember: true
           }}
-          {...layout}
-          form={form}
+          {...layout}      
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"

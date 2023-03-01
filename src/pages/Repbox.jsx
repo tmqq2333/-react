@@ -123,6 +123,7 @@ export default function Repbox(props) {
   return (
     <div className="table-list">
       <div>
+        <div>只接受excel表单</div>
       <input type="file" ref={inputFile} onChange={fileChange} />
       <Button type="primary" onClick={createBook}>导出</Button>
       </div>

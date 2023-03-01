@@ -1,18 +1,19 @@
-body {
+.particu {
   height: 5000px;
   overflow-y: scroll;
-}
+  :global {
+    .container {
+      text-align: center;
+    }
 
-.container {
-  text-align: center;
-}
-
-.box {
-  width: 200px;
-  height: 200px;
-  background: pink;
-  position: fixed;
-  top: 300px;
-  left: 100px;
-  opacity: .5;
+    .box {
+      width: 200px;
+      height: 200px;
+      background: pink;
+      position: fixed;
+      top: 300px;
+      left: 100px;
+      opacity: 0.5;
+    }
+  }
 }

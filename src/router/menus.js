@@ -103,13 +103,6 @@ const menus = [
         title: "拖拽",
         icon: <AreaChartOutlined />,
         component: React.lazy(() => import("../pages/Drag.jsx")),
-      },
-      {
-        key: "0-4-1",
-        path: "/work/ee",
-        title: "详情",
-        icon: <AreaChartOutlined />,
-        component: React.lazy(() => import("../pages/DragMobile.jsx")),
       }
     ]
   },

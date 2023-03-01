@@ -18,6 +18,8 @@ export default function Particulars() {
   });
   
   const cRef = componentReference.current;
+  const domp = document.getElementById("particu");
+   console.log("domp", domp);
   
   function _linear (t, b, _c, d) {
     var c = _c - b;
@@ -26,7 +28,16 @@ export default function Particulars() {
   
   function _render () {
     if (cRef.status === 'running') {
-      cRef.currentTime = Math.max(map(scrollTop(window), 0, document.body.scrollHeight - window.innerHeight, 0, cRef.endTime), 0);
+      cRef.currentTime = Math.max(
+        map(
+          scrollTop(window),
+          0,
+          document.body.scrollHeight - window.innerHeight,
+          0,
+          cRef.endTime
+        ),
+        0
+      );
     }
   
     if (cRef.status === 'start') {
@@ -93,10 +104,12 @@ export default function Particulars() {
   }, []);
   
   return (
-    <div className='table-list'>
-    <div className={style.container}>
-      <div id="box" className={style.box} />
-    </div>
+    <div className="table-list" >
+      <div className={style.particu} id="particu">
+        <div className="container">
+          <div id="box" className="box" />
+        </div>
+      </div>
     </div>
   );
 }

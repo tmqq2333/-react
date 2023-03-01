@@ -51,8 +51,10 @@ export const App = (props) => {
           <Layout>
             <Asider menus={fmenus} />
             <Content>
+              <>
               <BreadCrumbs></BreadCrumbs>
               <AppMain menus={fmenus}></AppMain>
+              </>
               {/* <Outlet></Outlet> */}
             </Content>
           </Layout>

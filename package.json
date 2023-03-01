@@ -1,7 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@babel/plugin-proposal-decorators": "^7.18.9",
@@ -11,7 +11,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.2.3",
+    "antd": "^5.2.0",
     "axios": "^0.27.2",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.5",
@@ -50,7 +50,6 @@
     "postcss-preset-env": "^7.0.1",
     "prompts": "^2.4.2",
     "react": "^18.2.0",
-    "react-antd-select": "^1.0.2",
     "react-app-polyfill": "^3.0.0",
     "react-app-rewired": "^2.2.1",
     "react-dev-utils": "^12.0.1",

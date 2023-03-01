@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
-import { Dropdown, Menu, Space,message,Drawer,Button, } from "antd";
+import { Dropdown, Menu, Space, message, Drawer, Button } from "antd";
 import defaultAvater from "@/assets/defaultImg.jpg";
 import logo from "@/assets/logo.jpg";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Informat from "./Informat";
 export default function Header() {
   const [avater, setAvater] = useState(defaultAvater);
@@ -13,54 +13,50 @@ export default function Header() {
   const onClose = () => {
     setOpen(false);
   };
-  const menu = (
-    <Menu
-      items={[
-        {
-          key: "1",
-          label: (
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => {
-                setOpen(true)
-              }}
-            >
-              修改资料
-            </a>
-          ),
-          icon: <SmileOutlined />,
-        },
-        {
-          type: "divider",
-        },
-        {
-          key: "2",
-          label: (
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => {
-                localStorage.clear();
-                sessionStorage.clear();
-                // logout();
-                message.success("退出成功")
-                navigate("/login")
-              }}
-            >
-              退出登录
-            </a>
-          ),
-          icon: <SmileOutlined />,
-        },
-      ]}
-    />
-  );
+  const items = [
+    {
+      key: "1",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          修改资料
+        </a>
+      ),
+      icon: <SmileOutlined />,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            localStorage.clear();
+            sessionStorage.clear();
+            // logout();
+            message.success("退出成功");
+            navigate("/login");
+          }}
+        >
+          退出登录
+        </a>
+      ),
+      icon: <SmileOutlined />,
+    },
+  ];
   return (
     <header>
       <img src={logo} alt="" className="logo-img" />
       <div>
-        <Dropdown overlay={menu}>
+        <Dropdown menu={{ items }}>
           <div onClick={(e) => e.preventDefault()} className="right">
             <Space>
               <img src={avater} alt="" className="avater-img" />
@@ -70,7 +66,65 @@ export default function Header() {
           </div>
         </Dropdown>
       </div>
-    <Informat visible={open} onCancel={onClose}></Informat>
+      <Informat visible={open} onCancel={onClose}></Informat>
     </header>
   );
 }
+// import { Dropdown, Space } from 'antd';
+// import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+// const Header = () => {
+//   const items =[
+//         {
+//           key: "1",
+//           label: (
+//             <a
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               // onClick={() => {
+//               //   setOpen(true)
+//               // }}
+//             >
+//               修改资料
+//             </a>
+//           ),
+//           icon: <SmileOutlined />,
+//         },
+//         {
+//           type: "divider",
+//         },
+//         {
+//           key: "2",
+//           label: (
+//             <a
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               onClick={() => {
+//                 localStorage.clear();
+//                 sessionStorage.clear();
+//                 // logout();
+//                 // message.success("退出成功")
+//                 // navigate("/login")
+//               }}
+//             >
+//               退出登录
+//             </a>
+//           ),
+//           icon: <SmileOutlined />,
+//         },
+//       ]
+//   return(
+//   <Dropdown
+//     menu={{
+//       items,
+//     }}
+//   >
+//     <a onClick={(e) => e.preventDefault()}>
+//       <Space>
+//         Hover me
+//         <DownOutlined />
+//       </Space>
+//     </a>
+//   </Dropdown>
+//   )
+// };
+// export default Header;

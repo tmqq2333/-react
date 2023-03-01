@@ -16,44 +16,46 @@ import menus from "@/router/menus";
 import React, { useState, useEffect } from "react";
 const { Option } = Select;
 const initForm = {
-  auth_name: localStorage.getItem('adminname'),
-  role: '',
-  remark: ''
-}
+  auth_name: localStorage.getItem("adminname"),
+  role: "",
+  remark: "",
+};
 const Informat = (props) => {
   const { visible, onCancel } = props;
   const [loading, setLoading] = useState(false);
   const [checkedKeys, setCheckedKeys] = useState([]);
-  const [form] = Form.useForm();  
-  const treeData = menus
+  const [form] = Form.useForm();
+  const treeData = menus;
 
   const onCheck = (checkedKeysValue) => {
     console.log("onCheck", checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
   };
-  const handleOk=(values)=>{
-    setLoading(true)
-    //操作 
-    const data={...values,...{permissions:checkedKeys}}
+  const handleOk = (values) => {
+    setLoading(true);
+    //操作
+    const data = { ...values, ...{ permissions: checkedKeys } };
     console.log(data);
-    setTimeout(()=>{
-      setLoading(false)
-      message.success('修改成功')
-      onCancel()
-    },2000)
-  }
+    setTimeout(() => {
+      setLoading(false);
+      message.success("修改成功");
+      onCancel();
+    }, 2000);
+  };
   const validateMessages = {
     required: "'${name}' 是必选字段",
   };
- useEffect(()=>{
-  form.setFieldsValue({
-    name: localStorage.getItem('username'),
-  })
-}, [visible])
+  useEffect(() => {
+    if (visible) {
+      form.setFieldsValue({
+        name: localStorage.getItem("username"),
+      });
+    }
+  }, [visible]);
   const footer = () => {
     return (
       <Space>
-        <Button type="primary" onClick={()=>form.submit()} loading={loading}>
+        <Button type="primary" onClick={() => form.submit()} loading={loading}>
           确定
         </Button>
         <Button onClick={onCancel}>取消</Button>
@@ -65,18 +67,21 @@ const Informat = (props) => {
       <Drawer
         title="修改资料"
         width={360}
-        visible={visible}
+        open={visible}
         onClose={onCancel}
         bodyStyle={{
           paddingBottom: 80,
         }}
         extra={footer()}
       >
-        <Form layout="vertical" hideRequiredMark  
-        form={form}
-        initialValues={initForm}
-        validateMessages={validateMessages}
-        onFinish={handleOk}>
+        <Form
+          layout="vertical"
+          hideRequiredMark
+          form={form}
+          initialValues={initForm}
+          validateMessages={validateMessages}
+          onFinish={handleOk}
+        >
           <Form.Item
             name="name"
             label="用户名"
@@ -122,19 +127,13 @@ const Informat = (props) => {
               <Option value="public">Public</Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-          >
+          <Form.Item name="description" label="Description">
             <Input.TextArea
               rows={4}
               placeholder="please enter url description"
             />
           </Form.Item>
-          <Form.Item
-            name="permissions"
-            label="权限"
-          >
+          <Form.Item name="permissions" label="权限">
             <Tree
               checkable
               defaultExpandAll
