@@ -12,6 +12,7 @@ export function toFixed(num, length) {
   }
   return parseFloat(fixed);
 }
+//判断用户的滚动方向
 export function scrollGate(callback) {
   let before = 0;
 
@@ -28,6 +29,7 @@ export function scrollGate(callback) {
     before = current;
   };
 }
+//映射函数
 export function map (s, a1, a2, b1, b2) {
   return ((s - a1) / (a2 - a1)) * (b2 - b1) + b1
 }
@@ -36,7 +38,7 @@ const isWindow = obj => {
   const toString = Object.prototype.toString.call(obj);
   return toString === '[object global]' || toString === '[object Window]' || toString === '[object DOMWindow]';
 };
-
+//scrollTop兼容函数  滚动的scrollTop映射到了时间轴
 export const scrollTop = (ele, target) => {
   const isWin = isWindow(ele);
   const y =

@@ -1,39 +1,42 @@
-import React, { useEffect, createRef, useState } from "react";
+import React, { useEffect, createRef,useRef, useState } from "react";
 import * as echarts from "echarts";
 import { connect } from "react-redux";
 import "./scss/list.scss";
 export const List = (props) => {
-  const eyeball = createRef();
+  const eyeball = useRef();
   // const [leep, setLeep] = useState(false);
   // const [sleep, setSleep] = useState(false);
   const [weakup, setWeakup] = useState("eyeSocketSleeping"); //休息：eyeSocketSleeping 醒来：eyeSocketLooking
-  const [opt, setOpt] = useState({eyeXDeg:0,eyeYDeg:0});
+  const [opt, setOpt] = useState({ eyeXDeg: 0, eyeYDeg: 0 });
   let eyeballChart;
   let leftRotSize = 0; // 旋转角度
   let ballSize = 0; // 眼睛尺寸
   let ballColor = "transparent";
   let rotTimer; // 定时器
-  let sleepTimer;
+  let sleepTimer;//延时器
   const someStyle = {
     "--c-eyeSocket": sleep() ? "rgb(255,187,255)" : "rgb(41, 104, 217)",
     "--c-eyeSocket-outer": sleep() ? "rgb(238,85,135)" : "#02ffff",
     "--c-eyeSocket-outer-shadow": sleep() ? "rgb(255, 60, 86)" : "transparent",
     "--c-eyeSocket-inner": sleep() ? "rgb(208,14,74)" : "rgb(35, 22, 140)",
   };
-  function sleep(){
-    if(weakup==="eyeSocketLooking") return true
-    else return false
+  function sleep() {
+    if (weakup === "eyeSocketLooking") return true;
+    else return false;
   }
   useEffect(() => {
     eyeballChart = echarts.init(eyeball.current); // 初始化画布
-    getEyeballChart();
+    getEyeballChart();//初始化眼睛
+
+
+
     // toSleep()
-    return ()=>{
+    return () => {
       clearTimeout(sleepTimer);
       clearInterval(rotTimer); // 清除定时器
-    }
-  },[]);
-  
+    };
+  }, []);
+
   function getEyeballChart() {
     eyeballChart.setOption({
       series: [
@@ -76,26 +79,26 @@ export const List = (props) => {
         leftRotSize === 360 ? (leftRotSize = 0) : (leftRotSize += 0.1); // 旋转，
       } else {
         // setSleep(false)
-        setWeakup('eyeSocketSleeping')
-        clearInterval(rotTimer); 
-      }    
+        setWeakup("eyeSocketSleeping");
+        clearInterval(rotTimer);//重点，取消定时器。不然休眠后唤醒有问题
+      }
     }, 10);
-    document.body.removeEventListener('mousemove', focusOnMouse)
-    setOpt({eyeXDeg:0,eyeYDeg:0})
+    document.body.removeEventListener("mousemove", focusOnMouse);
+    setOpt({ eyeXDeg: 0, eyeYDeg: 0 });
   }
   const onclickToWeakup = () => {
     // if (leep||sleep) return;
-    if (weakup!=='eyeSocketSleeping') return;
+    if (weakup !== "eyeSocketSleeping") return;
     clearTimeout(sleepTimer);
     clearInterval(rotTimer); // 清除定时器
-    // 只有第一次点击存在，再次点击eyeballChart会为空，ref更新有关
-    if(!eyeballChart){
-      eyeballChart = echarts.init(eyeball.current); 
+    // 只有第一次点击存在，再次点击eyeballChart会为空,【未解决:考虑为echarts原因】
+    if (!eyeballChart) {
+      eyeballChart = echarts.init(eyeball.current);
     }
     console.log(eyeballChart);
     // setSleep(false)
     // setLeep(true);
-    setWeakup('eyeSocketLooking')
+    setWeakup("eyeSocketLooking");
     ballColor = "rgb(208,14,74)";
     rotTimer = setInterval(() => {
       ballSize <= 50 && ballSize++;
@@ -106,7 +109,7 @@ export const List = (props) => {
     }, 10);
     setTimeout(() => {
       adjust();
-      document.body.addEventListener('mousemove', focusOnMouse);
+      document.body.addEventListener("mousemove", focusOnMouse);
     }, 3000);
   };
   //调整状态
@@ -123,10 +126,10 @@ export const List = (props) => {
           res();
         }
       }, 10);
-    }).then(() => {  
+    }).then(() => {
       // setSleep(true)
       // setLeep(false); // 设置常态样式
-      setWeakup('')
+      setWeakup("");
       ballColor = "rgb(0,238,255)";
       rotTimer = setInterval(() => {
         getEyeballChart();
@@ -148,11 +151,11 @@ export const List = (props) => {
       // // 旋转角度
       let eyeXDeg = (mouseCoords[1] / clientHeight) * 80; // 这里的80代表的是最上下边缘大眼X轴旋转角度
       let eyeYDeg = (mouseCoords[0] / clientWidth) * 60;
-      setOpt({eyeXDeg:eyeXDeg,eyeYDeg:eyeYDeg})
+      setOpt({ eyeXDeg: eyeXDeg, eyeYDeg: eyeYDeg });
       if (sleepTimer) clearTimeout(sleepTimer);
       sleepTimer = setTimeout(() => {
-       toSleep();
-     }, 10000);
+        toSleep();
+      }, 10000);
     }
   }
 
@@ -161,7 +164,9 @@ export const List = (props) => {
       {/* sleep?'x':(leep?'eyeSocketLooking':'eyeSocketSleeping') */}
       <div
         className={`eyeSocket ${weakup}`}
-        style={{ transform: `rotateY(${opt.eyeYDeg}deg) rotateX(${opt.eyeXDeg}deg)` }}
+        style={{
+          transform: `rotateY(${opt.eyeYDeg}deg) rotateX(${opt.eyeXDeg}deg)`,
+        }}
         onClick={onclickToWeakup}
       >
         <div
@@ -169,7 +174,9 @@ export const List = (props) => {
           style={{
             height: "100%",
             width: "100%",
-            transform: `translate(${opt.eyeYDeg / 1.5}px, ${-opt.eyeXDeg / 1.5}px)`,
+            transform: `translate(${opt.eyeYDeg / 1.5}px, ${
+              -opt.eyeXDeg / 1.5
+            }px)`,
           }}
         ></div>
       </div>
@@ -177,7 +184,7 @@ export const List = (props) => {
         className={`eyeSocket ${weakup}`}
         id="eyeFilter"
         onClick={onclickToWeakup}
-        style={{ opacity: sleep()? "1" : "0" }}
+        style={{ opacity: sleep() ? "1" : "0" }}
       ></div>
       {/* <div className="filter">
    

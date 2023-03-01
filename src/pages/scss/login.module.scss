@@ -1,0 +1,74 @@
+.login {
+  background-image: linear-gradient(to right, #30cfd0 0%, #330867 100%);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  :global {
+    h1 {
+      line-height: 60px;
+      letter-spacing: 5px;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
+    }
+    .img-box {
+      img {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        // background:url('../../assets/login.jpg') no-repeat;
+        // background-size: 100%;
+        overflow: hidden;
+        box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
+        transition: 0.5s;
+      }
+    }
+    .text-span {
+      line-height: 60px;
+      color: #fff;
+      display: block;
+      text-align: center;
+      &:hover {
+        color: #f6c0d7;
+      }
+    }
+    .box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 40px 0;
+    }
+    .login_pre {
+      width: 449px;
+      height: 420px;
+      z-index: 2;
+      align-items: center;
+      border-radius: 4px;
+      box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      left: 1px;
+      top: 0;
+      transition: 0.5s ease-in-out;
+    }
+    .login_box {
+      width: 900px;
+      height: 422px;
+      position: relative;
+      border-radius: 4px;
+      box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      border: 1px solid rgba($color: #fff, $alpha: 0.6);
+      justify-content: space-around;
+      &_r {
+        width: 320px;
+      }
+    }
+  }
+}
+.ant-form-item-label > label,
+.ant-checkbox-wrapper {
+  color: #ffffff;
+}

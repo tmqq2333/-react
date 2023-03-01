@@ -1,13 +1,13 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef,createRef } from 'react';
 import { scrollTop, scrollGate, toFixed, map } from '../utils/index';
-import './scss/particulars.scss'
+import style from  './scss/particulars.module.scss'
 export default function Particulars() {
   const componentReference = useRef({
     animationData: [
       { key: 'left', defaultValue: 100, currentValue: 100, target: 800, duration: 2000, startTime: 0 },
       { key: 'opacity', defaultValue: .5, currentValue: .5, target: 1, duration: 1000, startTime: 1000 },
       { key: 'rotateX', defaultValue: 0, currentValue: 1, target: 270, duration: 1000, startTime: 2000 },
-      { key: 'rotateY', defaultValue: 0, currentValue: 1, target: 180, duration: 1000, startTime: 2000 }
+      { key: 'rotateY', defaultValue: 0, currentValue: 1, target: 180, duration: 1000, startTime: 2000 },
     ],
     status: 'start',
     currentTime: 0,
@@ -73,12 +73,12 @@ export default function Particulars() {
       }
     }
   
-    window.requestAnimationFrame(_render);
+    window.requestAnimationFrame(_render);//js实现一个无限循环的动画
   }
   
   useLayoutEffect(() => {
     const myDiv = document.querySelector('#box');
-    cRef.target = myDiv;
+    cRef.target = myDiv;//触发事件的真实元素
     cRef.animationData.forEach(item => {
       const { duration, startTime } = item;
       cRef.endTime = Math.max(duration + startTime, cRef.endTime);
@@ -94,8 +94,8 @@ export default function Particulars() {
   
   return (
     <div className='table-list'>
-    <div className="container">
-      <div id="box" className="box" />
+    <div className={style.container}>
+      <div id="box" className={style.box} />
     </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { React, useState, Fragment, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import {
   Select,
   Button,
@@ -11,29 +11,30 @@ import {
   Popconfirm,
 } from "antd";
 import SelectD from "./select";
-import { getPassword } from "@/api/user";
-import {getMateria} from '@/utils/util'
+import {getMateria} from './util' //远程搜索
 const { Option } = Select;
 /*
 配置化组件：
 title:'标题'
-width---宽度间隔   
+width---宽度间隔
 props:getCreate--创建的api
 postPer--执行的api
 getRefresh--执行成功返回一个提醒
-listArr--list循环       
+listArr--list循环
+isline--存在：无ChidlistArr   
+ps:搜索框：参数name接收，输出data：{label：name，value：value} 
 */
 /*
 改良了一下，之前的不灵活
 listArr配置
 {
   title: "受料槽", 标题
-  disabled: true,   初始化
-  mode: "multiple",  多选
-  rule:true,   必选
+  undisabled: true,   初始化状态是否可选
+  mode: "multiple",  模式多选，其余配置同antd
+  rule:true,   是否必选
   controlS:true,  被依赖方
-  controlM:["startplace",{disable:true,ganged:true}], 订阅者["依赖字段",{disable:是否可选，true or 数组,ganged:是否联级}]
-  placeholder: "等待作业起点选择",  //默认，没有这个就默认第一行数据
+  controlM:["startplace",{disable:true,ganged:true}], 订阅者["依赖字段",{disable:是否可选（true or 数组）,ganged:是否联级}]
+  unplaceholder: "true",  //默认显示选项第一行数据
   valueName: "startplace_sub", 字段
   option: {              // option
     "1#":[...setChildren(5)],
@@ -42,62 +43,32 @@ listArr配置
 },
 */
 //select清除与value同时会有bug,解决：from存放值
-// let optionP={}
-const plantOption = [];
-const ChidlistArr = [
-  {
-    title: "类型",
-    undisabled: true,
-    rule: true,
-    controlM:["storage_code",{disable:true,ganged:"true"}],
-    valueName: "plant_code",
-    option:{"k1":[{value:'s1',label:'吾皇'}],"k2":[{value:'s1',label:'巴扎黑'}],"k3":[{value:'s1',label:'卡卡'}]}
-    },
-  {
-    title: "视角",
-    undisabled: false,
-    controlS:true,
-    rule: true,
-    unplaceholder: 'true',
-    valueName: "storage_code",
-    option:[{value:'k1',label:'12'},{value:'k2',label:'88'},{value:'k3',label:'66'}]
-  },
-  {
-    title: "时代",
-    undisabled: false,
-    rule: true,
-    valueName: "material_name",
-    showSearch:true,
-    showArrow:false,
-    filterOption:false,
-    onSearch:true
-  },
-  {
-    title: "名称",
-    rule: true,
-    undisabled: false,
-    valueName: "batch_number",
-    type:()=>{
-      return  <Input  style={{ width: 270 }}/>
-    }
-  },
-];
+let ChidlistArr=[]
 export default function TopSelect(props) {
-  const [disable, setDisable] = useState(true);
   const [inf, setInf] = useState();
-  const [fromLoading, setFromLoading] = useState(false);
-  const [perLoading, setPerLoading] = useState(false);
-  //创建参数
-  const [creatList, setCreatList] = useState({});
-  //执行参数
-  const [perList, setPerList] = useState(null);
-  const [performList, setPerformList] = useState([]);
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
-
+  const {children,mark} = props
+    let slots = {
+      default: []
+  }
+  if(children) {
+      let childrens = Array.isArray(children) ? children : [children];
+      childrens.forEach(item => {
+              if(item.props.slot) {
+                  slots[item.props.slot] = item
+              } else {
+                  slots['default'].push(item)
+              }
+      })
+  }
   const handleSearch = (newValue) => {
+    if (!props.getSearch) {
+      message.warn("antd-select组件未加载getSearch方法");
+      return null;
+    }
     if (newValue) {
-      getMateria(newValue,getPassword, setData);
+      getMateria(newValue,props.getSearch, setData);
     } else {
       setData([]);
     }
@@ -129,68 +100,11 @@ export default function TopSelect(props) {
     // }
   };
   const onFinish = (values) => {
-    setFromLoading(true);
-    console.log("Success:", values);
-    props
-      .getCreate({data:{ startplace:values.startplace,
-        startplace_sub:values.startplace_sub,
-        endplace:values.endplace,
-        endplace_sub:values.endplace_sub}})
-      .then((e) => {
-        console.log(e);
-        message.success("创建成功");
-        const route=e.data??undefined
-        console.log(route);
-        setPerformList(route);
-        setPerList(undefined)
-        setDisable(false);
-        setFromLoading(false);
-        let  material=values.material_name.split('|')
-        setCreatList({...values,material_code:material[1],material_name:material[0]})
-      })
-      .catch((e) => {
-        message.error("创建失败");
-        setFromLoading(false);
-      });
+    props.getValue?.(values)
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
     message.warn("请选择");
-    setFromLoading(false);
-  };
-  const performChange = (value,data) => {
-    if (value !== "") {
-      setPerList({route:data.children,route_code:value});
-    }
-  };
-
-  const confirm = (e) => {
-    setPerLoading(true);
-    console.log(e);
-    console.log(perList);
-    if (perList) {
-      props
-        .postPer({...creatList, ...perList })
-        .then(() => {
-          message.success("执行成功");
-          props.getRefresh?.(!disable);
-          setPerLoading(false);
-          setDisable(true);
-          setPerList(undefined)
-        })
-        .catch((e) => {
-          message.error("执行失败");
-          console.log(e);
-          setPerLoading(false);
-        });
-    } else {
-      setPerLoading(false);
-      message.warn("请选择");
-    }
-  };
-  const cancel = (e) => {
-    console.log(e);
-    message.warn("未执行");
   };
   const infBroad=(e)=>{
     setInf(e)
@@ -221,17 +135,9 @@ export default function TopSelect(props) {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
-            requiredMark={false}
+            requiredMark={mark?true:false}
           >
-            <Row gutter={[props.width ?? 68, 6]}>
-            {/* <Col className="gutter-row">
-            <Form.Item
-                    label={"批次号 :"}
-                    name={"batch_number"}
-                      >
-                 <Input  style={{ width: 270 }}/>
-                      </Form.Item>
-              </Col> */}
+            <Row gutter={props.gutter ??[ 68, 6]}>
               {findOnline(props.isline??false).map((item, index) => {
                   return (
                     <Col className="gutter-row" key={index}>
@@ -254,68 +160,17 @@ export default function TopSelect(props) {
                           clearValue={clearValue}
                           option={item.option??data}
                           inf={inf}
-                          style={{ width: 270 }}
+                          style={{ width:item.width?? 270 }}
                           infBroad={infBroad}
                         ></SelectD>)
-                        }
-                       
+                        }     
                       </Form.Item>
                     </Col>
                   );
                 })}
             </Row>
-            <div id="action">
-              <div>
-                <span>作业创建 ：</span>
-                <Button
-                  type="primary"
-                  loading={fromLoading}
-                  htmlType="submit"
-                  style={{ width: 130 }}
-                >
-                  创建
-                </Button>
-              </div>
-              <div style={{ marginTop: 20 }}>
-                <span>作业执行 ：</span>
-                <Popconfirm
-                  title="确定执行当前流程并启动相关设备？"
-                  onConfirm={confirm}
-                  onCancel={cancel}
-                  okText="是"
-                  cancelText="否"
-                >
-                  <Button
-                    type="primary"
-                    loading={perLoading}
-                    style={{ width: 130 }}
-                  >
-                    执行
-                  </Button>
-                </Popconfirm>
-              </div>
-            </div>
+            {slots['default']}
           </Form>
-        </div>
-        <div
-          style={{ width: 1000, height: 90, marginTop: -10, marginLeft: 10 }}
-        >
-          <p style={{ height: 30 }}>
-            {props.title}
-            流程 :
-          </p>
-          <Select
-            disabled={disable}
-            placeholder="等待反馈..."
-            style={{ width: 1000 }}
-            value={perList?.route_code}
-            onChange={(e,v)=>{performChange(e,v)}}
-          >
-            {performList.map((v,i)=>{
-              return  <Option key={i} value={v.route_code}>{v.route}</Option>
-            })}
-           
-          </Select>
         </div>
       </div>
     )

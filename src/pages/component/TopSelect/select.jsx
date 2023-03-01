@@ -7,7 +7,7 @@ export default function SelectD(props) {
   const [disable, setDisable] = useState(!!props.undisabled??false);
   const [optionList, setOptionList] = useState([]);
   const {infBroad,option,clearValue,onChange,value}=props
-  const inf=['infBroad','option','clearValue','onChange','value','controlS','controlM','undisabled','type','inf','id','rule','valueName']
+  const inf=['infBroad','option','clearValue','onChange','value','controlS','controlM','undisabled','type','inf','id','rule','valueName','getValue']
   let preprops={}//组件本身数据
   for(let v in props){
     if(!inf.includes(v)){

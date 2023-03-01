@@ -74,6 +74,13 @@ const menus = [
         title: "资料详情",
         icon: <AreaChartOutlined />,
         component: React.lazy(() => import("../pages/Particulars.jsx")),
+      },
+      {
+        key: "0-2-2",
+        path: "/means/df",
+        title: "资料修改",
+        icon: <AreaChartOutlined />,
+        component: React.lazy(() => import("../pages/Register.jsx")),
       }
     ]
   },
@@ -83,6 +90,28 @@ const menus = [
     title: "统计",
     icon: <AreaChartOutlined />,
     component: React.lazy(() => import("../pages/Statistics.jsx")),
+  },
+  {
+    key: "0-4",
+    path: "/work",
+    title: "功能",
+    icon: <AreaChartOutlined />,
+    children: [
+      {
+        key: "0-4-0",
+        path: "/work/drag",
+        title: "拖拽",
+        icon: <AreaChartOutlined />,
+        component: React.lazy(() => import("../pages/Drag.jsx")),
+      },
+      {
+        key: "0-4-1",
+        path: "/work/ee",
+        title: "详情",
+        icon: <AreaChartOutlined />,
+        component: React.lazy(() => import("../pages/DragMobile.jsx")),
+      }
+    ]
   },
 ]
 

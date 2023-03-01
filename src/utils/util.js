@@ -29,38 +29,3 @@ export const deepCopy = (obj) => {
   }
    return newObj 
 };
-/**
- * @desc 远程搜索
- * @param value 搜索的值
- * @param callback 接收的回调数据
- * @param getList 搜索接口
- * eg getMateria(newValue,getList, setData);
- * */
-let timeout;
-let currentValue;
-export function getMateria(value,getList,callback) {
-  if (timeout) {
-    clearTimeout(timeout);
-    timeout = null;
-  }
-  currentValue = value;
-  const fake = () => {
-    getList({ material_name: value })
-      .then((d) => {
-        if (currentValue === value) {
-          const { data } = d;
-          const result = data.map((item) => ({
-            value: `${item['material_name']}|${item['material_code']}`,
-            label: `${item['material_name']}|${item['material_code']}`,
-          }));
-          callback(result);
-        }
-      }).catch(
-        () => {
-          console.log('物料接口出错');
-        }
-      )
-  };
-
-  timeout = setTimeout(fake, 300);//延迟，防抖
-}

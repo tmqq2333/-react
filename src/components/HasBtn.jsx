@@ -1,5 +1,5 @@
 import React from "react";
-
+//按钮权限
 export default function HasBtn(props) {
   const { has, children } = props;
   console.log(children);

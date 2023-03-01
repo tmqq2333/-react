@@ -2,7 +2,7 @@ import { Button, Checkbox, Form, Input, message } from "antd";
 import React, { useState } from "react";
 import { getPassword } from "@/api/user";
 import { useNavigate } from "react-router-dom";
-import "./scss/login.scss";
+import style from "./scss/login.module.scss";
 let loginMsg = [
   {
     msg: "没有账号?注册",
@@ -50,7 +50,7 @@ const Login = () => {
     }
   };
   return (
-    <div className="login">
+    <div className={style.login}>
       <div className="login_box">
         <div
           className="box login_pre"
