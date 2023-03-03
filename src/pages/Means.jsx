@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { connect } from "react-redux";
-//import {TopSelect} from "react-antd-select";
-import TopSelect from "./component/TopSelect/index";
+import {TopSelect} from "react-antd-select";
+//import TopSelect from "./component/TopSelect/index";
 import HasBtn from "@/components/HasBtn";
 import './scss/means.scss'
 import { Space,Button,Input} from "antd";
